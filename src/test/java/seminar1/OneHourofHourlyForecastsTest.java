@@ -1,6 +1,7 @@
 package seminar1;
 
-import seminar1.weather.Weather;
+import seminar1.weather.WeatherInfo;
+import seminar1.weather.Temperature;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.client.WireMock;
@@ -53,10 +54,10 @@ public class OneHourofHourlyForecastsTest extends AccuweatherAbstractTest{
     void test200WeatherInfoResponseCode() throws IOException, URISyntaxException {
         logger.info("Тест 200 запущен");
         ObjectMapper objectMapper = new ObjectMapper();
-        Weather bodyOk = new Weather();
+        WeatherInfo bodyOk = new WeatherInfo();
         bodyOk.setIconPhrase("OK");
 
-        Weather bodyError = new Weather();
+        WeatherInfo bodyError = new WeatherInfo();
         bodyError.setIconPhrase("ERROR");
 
         stubFor(WireMock.get(urlPathEqualTo("/forecasts/v1/hourly/autocomplete"))
@@ -87,8 +88,8 @@ public class OneHourofHourlyForecastsTest extends AccuweatherAbstractTest{
         Assertions.assertEquals(200, responseOk.getStatusLine().getStatusCode());
         Assertions.assertEquals(200, responseError.getStatusLine().getStatusCode());
 
-        Weather weatherInfoOk = objectMapper.readValue(responseOk.getEntity().getContent(), WeatherInfo.class);
-        Weather weatherInfoError = objectMapper.readValue(responseError.getEntity().getContent(), WeatherInfo.class);
+        WeatherInfo weatherInfoOk = objectMapper.readValue(responseOk.getEntity().getContent(), WeatherInfo.class);
+        WeatherInfo weatherInfoError = objectMapper.readValue(responseError.getEntity().getContent(), WeatherInfo.class);
         Assertions.assertEquals("OK", weatherInfoOk.getIconPhrase());
         Assertions.assertEquals("ERROR", weatherInfoError.getIconPhrase());
     }
